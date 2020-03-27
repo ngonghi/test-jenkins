@@ -1,9 +1,23 @@
 pipeline {
     agent any
+    properties([
+        parameters([
+            gitParameter(branch: '',
+                         branchFilter: 'origin/(.*)',
+                         defaultValue: 'master',
+                         description: '',
+                         name: 'BRANCH',
+                         quickFilterEnabled: false,
+                         selectedValue: 'NONE',
+                         sortMode: 'NONE',
+                         tagFilter: '*',
+                         type: 'PT_BRANCH')
+        ])
+    ])
+    node {
+        git branch: "${params.BRANCH}", url: 'https://github.com/ngonghi/test-jenkins.git'
+    }
     stages {
-        stage('Checkout SCM') {
-            git branch: params.BRANCH, url: "https://github.com/ngonghi/test-jenkins.git"
-        }
         stage('Build docker image') {
             steps {
                 echo '> Building the docker images ...'
@@ -31,3 +45,5 @@ pipeline {
         }
     }
 }
+
+
