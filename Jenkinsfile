@@ -6,9 +6,17 @@ pipeline {
         }
     }
     stages {
+        stage('Git Checkout') {
+            steps {
+                echo '> Checking out deploy branch ...'
+                sh 'git fetch origin'
+                sh 'git checkout params.branch'
+                sh 'git pull origin params.branch'
+            }
+        }
         stage('Build') { 
             steps {
-                echo 'Test'
+                sh 'test.sh'
                 sh 'npm install' 
             }
         }
