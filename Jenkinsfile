@@ -1,10 +1,7 @@
 pipeline {
     agent any
-
-
     stages {
         stage('Checkout SCM') {
-            echo params.BRANCH
             git branch: params.BRANCH, url: "https://github.com/ngonghi/test-jenkins.git"
         }
         stage('Build docker image') {
@@ -34,5 +31,3 @@ pipeline {
         }
     }
 }
-
-
