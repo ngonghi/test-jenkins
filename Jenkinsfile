@@ -5,11 +5,12 @@ pipeline {
       gitParameter branchFilter: 'origin/(.*)', defaultValue: 'master', name: 'BRANCH', type: 'PT_BRANCH'
     }
 
-    options {
-        skipDefaultCheckout(true)
-    }
-
     stages {
+        stage('Example') {
+          steps {
+            git branch: "${params.BRANCH}", url: 'https://github.com/ngonghi/test-jenkins.git'
+          }
+        }        
         stage('Build docker image') {
             steps {
                 echo '> Building the docker images ...'
