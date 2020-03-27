@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    properties([
+    options([
         parameters([
             gitParameter(branch: '',
                          branchFilter: 'origin/(.*)',
@@ -14,10 +14,12 @@ pipeline {
                          type: 'PT_BRANCH')
         ])
     ])
-    node {
-        git branch: "${params.BRANCH}", url: 'https://github.com/ngonghi/test-jenkins.git'
-    }
     stages {
+        stage('Example') {
+          steps {
+            git branch: "${params.BRANCH}", url: 'https://github.com/ngonghi/test-jenkins.git'
+          }
+        }
         stage('Build docker image') {
             steps {
                 echo '> Building the docker images ...'
