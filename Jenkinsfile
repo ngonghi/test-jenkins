@@ -12,7 +12,7 @@ pipeline {
         stage('Build docker image') {
             steps {
                 echo '> Building the docker images ...'
-                sh 'docker-compose -f /home/kasika-docker/docker-composer.kasika_db_manager_ci.yml up --exit-code-from kasika_db_manager_app --remove-orphans kasika_db_manager_app'
+                sh 'docker-compose -f /home/kasika-docker/docker/docker-composer.kasika_db_manager_ci.yml up --exit-code-from kasika_db_manager_app --remove-orphans kasika_db_manager_app'
             }
         }
         stage('Install vendor') {
@@ -31,7 +31,7 @@ pipeline {
         stage('Destroy') {
             steps {
                 echo '> Destroying the docker artifacts ...'
-                sh 'docker-compose -f /home/kasika-docker/docker-composer.kasika_db_manager_ci.yml down'
+                sh 'docker-compose -f /home/kasika-docker/docker/docker-composer.kasika_db_manager_ci.yml down'
             }
         }
     }
