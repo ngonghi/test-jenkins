@@ -1,24 +1,37 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:6-alpine'
-            args '-p 3000:3000'
-        }
+    agent any
+
+    options {
+        skipDefaultCheckout(true)
     }
+
     stages {
-        stage('Git Checkout') {
+        stage('Build docker image') {
             steps {
-                echo '> Checking out deploy branch ...'
-                sh 'git fetch origin'
-                sh 'git checkout params.branch'
-                sh 'git pull origin params.branch'
+                echo '> Building the docker images ...'
+                sh 'docker-compose -f /home/kasika-docker/docker-composer.kasika_db_manager_ci.yml up --exit-code-from kasika_db_manager_app --remove-orphans kasika_db_manager_app'
             }
         }
-        stage('Build') {
+        stage('Install vendor') {
             steps {
-                sh 'test.sh'
-                sh 'npm install'
+                echo '> Install vendor ...'
+                sh 'docker-compose exec -w /var/www/html/kasika-db-manager -T kasika_db_manager_app npm install'
+                sh 'docker-compose exec -w /var/www/html/kasika-db-manager -T kasika_db_manager_app npm run production'
+                sh 'docker-compose exec -w /var/www/html/kasika-db-manager -T kasika_db_manager_app composer install'
+            }
+        }
+        stage('Push to server') {
+            steps {
+                echo '> Pushing source to server ...'
+            }
+        }
+        stage('Destroy') {
+            steps {
+                echo '> Destroying the docker artifacts ...'
+                sh 'docker-compose -f /home/kasika-docker/docker-composer.kasika_db_manager_ci.yml down'
             }
         }
     }
 }
+
+
