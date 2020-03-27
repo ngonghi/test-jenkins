@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'nghinv91:php70:0.1'
+            image 'nghinv91/php70:0.1'
         }
     }
     parameters {
